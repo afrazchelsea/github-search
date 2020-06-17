@@ -4,11 +4,12 @@ const ui = new UI();
 // Search input
 const searchUser = document.getElementById("searchUser");
 
-// Search input event listener
-searchUser.addEventListener("keyup", (e) => {
-  // Get input text
-  const userText = e.target.value;
+//Search input event listener
+searchUser.addEventListener("keyup", getData());
 
+function getData(e) {
+  // Get input text
+  const userText = searchUser.value;
   if (userText !== "") {
     // Make http call
     github.getUser(userText).then((data) => {
@@ -25,4 +26,16 @@ searchUser.addEventListener("keyup", (e) => {
     // Clear profile
     ui.clearProfile();
   }
-});
+}
+
+const debounce = function (fn, d) {
+  let timer;
+  return function () {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      getData();
+    }, d);
+  };
+};
+
+const betterFunction = debounce(getData, 500);
