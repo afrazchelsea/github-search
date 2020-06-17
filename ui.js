@@ -4,6 +4,35 @@ class UI {
   }
 
   showProfile(user) {
+    if (user.company === null) {
+      user.company = "None";
+    }
+    if (user.location === null) {
+      user.location = "None";
+    }
+
+    const date = new Date(user.created_at);
+
+    const dateTimeFormat = new Intl.DateTimeFormat("en", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+    });
+
+    const [
+      { value: month },
+      ,
+      { value: day },
+      ,
+      { value: year },
+    ] = dateTimeFormat.formatToParts(date);
+
+    const newDate = `${day}-${month}-${year}`;
+
+    if (user.blog === "") {
+      user.blog = "-";
+    }
+
     this.profile.innerHTML = `
         <div class="card card-body mb-3">
           <div class="row">
@@ -19,9 +48,9 @@ class UI {
               <br><br>
               <ul class="list-group">
                 <li class="list-group-item">Company: ${user.company}</li>
-                <li class="list-group-item">Website/Blog: ${user.blog}</li>
+                <li class="list-group-item">Website/Blog: <a href="https://${user.blog}" target=_blank> ${user.blog}</a></li>
                 <li class="list-group-item">Location: ${user.location}</li>
-                <li class="list-group-item">Member Since: ${user.created_at}</li>
+                <li class="list-group-item">Member Since: ${newDate}</li>
               </ul>
             </div>
           </div>
@@ -36,7 +65,7 @@ class UI {
   showRepos(repos) {
     let output = "";
 
-    repos.forEach(function(repo) {
+    repos.forEach(function (repo) {
       output += `
       <div class="card card-body mb-2">
         <div class="row">
@@ -81,7 +110,7 @@ class UI {
     // timeouut after 3 secs
     setTimeout(() => {
       this.clearAlert();
-    }, 3000);
+    }, 2000);
   }
 
   clearAlert() {
